@@ -9,8 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from .models import CarMake, CarModel
 from .populate import initiate
 from .restapis import (
-    get_request, 
-    analyze_review_sentiments, 
+    get_request,
+    analyze_review_sentiments,
     post_review
 )
 
@@ -60,16 +60,16 @@ def registration(request):
             email=email
         )
         login(
-            request, 
+            request,
             authenticate(username=username, password=password)
         )
         return JsonResponse({
-            "userName": username, 
+            "userName": username,
             "status": "Authenticated"
         })
     else:
         return JsonResponse({
-            "userName": username, 
+            "userName": username,
             "error": "Already Registered"
         })
 
@@ -82,7 +82,7 @@ def get_cars(request):
 
     car_models = CarModel.objects.select_related('car_make')
     cars = [
-        {"CarModel": car_model.name, 
+        {"CarModel": car_model.name,
          "CarMake": car_model.car_make.name}
         for car_model in car_models
     ]
@@ -90,11 +90,12 @@ def get_cars(request):
 
 
 def get_dealerships(request, state="All"):
-    """Render a list of dealerships; all by default, or particular state if passed."""
+    """Render a list of dealerships; all by default,
+    or particular state if passed."""
     endpoint = "/fetchDealers" if state == "All" else f"/fetchDealers/{state}"
     dealerships = get_request(endpoint)
     return JsonResponse({
-        "status": 200, 
+        "status": 200,
         "dealers": dealerships
     })
 
@@ -110,11 +111,11 @@ def get_dealer_reviews(request, dealer_id):
             )
             review_detail['sentiment'] = response['sentiment']
         return JsonResponse({
-            "status": 200, 
+            "status": 200,
             "reviews": reviews
         })
     return JsonResponse({
-        "status": 400, 
+        "status": 400,
         "message": "Bad Request"
     })
 
@@ -125,11 +126,11 @@ def get_dealer_details(request, dealer_id):
         endpoint = f"/fetchDealer/{dealer_id}"
         dealership = get_request(endpoint)
         return JsonResponse({
-            "status": 200, 
+            "status": 200,
             "dealer": dealership
         })
     return JsonResponse({
-        "status": 400, 
+        "status": 400,
         "message": "Bad Request"
     })
 
@@ -143,12 +144,12 @@ def add_review(request):
             return JsonResponse({"status": 200})
         except Exception:
             return JsonResponse({
-                "status": 401, 
+                "status": 401,
                 "message": "Error in posting review"
             })
         finally:
             print("add_review request successful!")
     return JsonResponse({
-        "status": 403, 
+        "status": 403,
         "message": "Unauthorized"
     })
