@@ -1,8 +1,7 @@
 # Uncomment the imports below before you add the function code
-# import requests
+import requests
 import os
 from dotenv import load_dotenv
-from .restapis import get_request, analyze_review_sentiments, post_review
 
 load_dotenv()
 
@@ -39,6 +38,7 @@ def analyze_review_sentiments(text):
         print(f"Unexpected {err=}, {type(err)=}")
         print("Network exception occurred")
 
+# def post_review(data_dict):
 def post_review(data_dict):
     request_url = backend_url+"/insert_review"
     try:
